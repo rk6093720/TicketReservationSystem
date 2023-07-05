@@ -1,12 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const {Connect} = require("./config/db")
-const app = express();
+const {Connect} = require("./config/db");
+const route = require("./routes/user.routes");
+require("dotenv").config();
+const cors = require("cors");
 const Port = process.env.PORT || 8000;
-app.use(express.json())
-app.get("/",(req,res)=>{
-    res.send("hello");
-})
+const app = express();
+app.use(express.urlencoded({extended:true}))
+app.use(express.json());
+app.use(cors());
+// app.get("/",(req,res)=>{
+//     res.send("welcome to our TicketReservationSystem ")
+// })
+app.use("/", route)
 app.listen(Port,async()=>{
     try {
         await Connect;
@@ -15,5 +21,5 @@ app.listen(Port,async()=>{
         console.log("Connection has not successfully");
         console.log(error);
     }
-    console.log(8080)
+    console.log(`${Port}`)
 })
