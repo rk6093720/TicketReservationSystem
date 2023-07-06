@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const {Connect} = require("./config/db");
 const route = require("./routes/user.routes");
+const ticketroute = require("./routes/ticket.routes");
 require("dotenv").config();
 const cors = require("cors");
 const Port = process.env.PORT || 8000;
@@ -12,7 +13,8 @@ app.use(cors());
 // app.get("/",(req,res)=>{
 //     res.send("welcome to our TicketReservationSystem ")
 // })
-app.use("/", route)
+app.use("/", route);
+app.use("/", ticketroute)
 app.listen(Port,async()=>{
     try {
         await Connect;
