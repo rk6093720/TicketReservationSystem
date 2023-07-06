@@ -1,14 +1,14 @@
 const {Router} = require("express");
 const {Signup, Signin} = require("../controller/user.controller");
 require("dotenv").config();
-const route = Router();
-route.get("",(req,res)=>{
+const User_Route = Router();
+User_Route.get("",(req,res)=>{
     console.log("TicketReservationSystem");
     res.send("welcome to our TicketReservationSystem ")
 })
 // user signup
-route.post("/create", Signup);
+User_Route.post("/create", Signup);
 // user login
-route.post("/login", Signin)
+User_Route.post("/login", Signin)
 
-module.exports=route;
+module.exports=User_Route;

@@ -1,17 +1,14 @@
 const express = require("express");
-const {Ticketlist,CreateTicket,TicketDetail} = require("../controller/ticket.controller")
+const {Ticketlist,CreateTicket,TicketDetail,SelectSeat} = require("../controller/ticket.controller")
 require("dotenv").config();
-// const {Router} = require("express");
-
-require("dotenv").config();
-const route = express.Router();
-
-
-//route get method
-route.get("/ticketlist", Ticketlist);
+const Ticket_Router = express.Router();
+//Ticket_Router get method
+Ticket_Router.get("/ticketlist", Ticketlist);
 //details by get method
-route.get("/ticketdetails/:id",TicketDetail);
-// route post method
-route.post("/createticket", CreateTicket)
+Ticket_Router.get("/ticketdetails/:id",TicketDetail);
+// Ticket_Router post method
+Ticket_Router.post("/createticket", CreateTicket);
+// Ticket_Router for seat selection by post method
+Ticket_Router.post("/seat_selection",SelectSeat)
 
-module.exports=route
+module.exports=Ticket_Router

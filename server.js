@@ -1,8 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const {Connect} = require("./config/db");
-const route = require("./routes/user.routes");
-const ticketroute = require("./routes/ticket.routes");
+const User_Route = require("./routes/user.routes");
+const Ticket_Router = require("./routes/ticket.routes");
+const  addtoCartRouter = require("./routes/cart_Ticket.routes")
 require("dotenv").config();
 const cors = require("cors");
 const Port = process.env.PORT || 8000;
@@ -13,8 +14,9 @@ app.use(cors());
 // app.get("/",(req,res)=>{
 //     res.send("welcome to our TicketReservationSystem ")
 // })
-app.use("/", route);
-app.use("/", ticketroute)
+app.use("/", User_Route);
+app.use("/", Ticket_Router);
+app.use("/", addtoCartRouter)
 app.listen(Port,async()=>{
     try {
         await Connect;

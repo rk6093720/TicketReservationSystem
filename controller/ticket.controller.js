@@ -82,9 +82,31 @@ const CreateTicket = async(req,res)=>{
         res.status(500).json({message:"ticket is not created"})
     }
 }
+//seat selection
+const SelectSeat=async(req,res)=>{
+     const id= req?.params?.id;
+    //  console.log(id)
+     try {
+    const seat = await TicketModal.findOne({id})
+    console.log(seat)
+    if(!seat){
+        return res.status(404).json({message:"seat is not found"});
+    }
+    if(seat.isconfirm){
+      return res.status(400).json({ message: 'Seat is already reserved' });    
+    }
+    seat.isconfirm= true;
+    await seat.save();
+     res.status(200).json({message:"seat confirm successfully",seat})
+   } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal server error' })
+   }
+}
 module.exports={
     Ticketlist,
     CreateTicket,
-    TicketDetail
+    TicketDetail,
+    SelectSeat
 
 }
