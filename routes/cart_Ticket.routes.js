@@ -1,11 +1,9 @@
 const express = require("express");
-const { getcart ,updatecart, addcart, deletecart } = require("../controller/addtocart.controller");
+const {AddtocartController } = require("../controller/addtocart.controller")
 require("dotenv").config();
 const addtoCartRouter = express.Router();
-addtoCartRouter.get("/cartlist", getcart);
-addtoCartRouter.patch("/:id", updatecart);
-addtoCartRouter.post("/addcart", addcart);
-addtoCartRouter.delete("/:id", deletecart);
-
-
-module.exports =  addtoCartRouter ;
+addtoCartRouter.get("/cart", AddtocartController.getcart );
+addtoCartRouter.post("/addcart",AddtocartController.addcart);
+addtoCartRouter.delete("/:id",  AddtocartController.deletecart);
+addtoCartRouter.patch("/:id",  AddtocartController.updatecart);
+module.exports = { addtoCartRouter} ;

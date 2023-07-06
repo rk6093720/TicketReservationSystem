@@ -1,9 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const {Connect} = require("./config/db");
-const User_Route = require("./routes/user.routes");
-const Ticket_Router = require("./routes/ticket.routes");
-const  addtoCartRouter = require("./routes/cart_Ticket.routes")
+const {User_Route} = require("./routes/user.routes");
+const {Ticket_Router} = require("./routes/ticket.routes");
+const  {addtoCartRouter} = require("./routes/cart_Ticket.routes")
 require("dotenv").config();
 const cors = require("cors");
 const Port = process.env.PORT || 8000;

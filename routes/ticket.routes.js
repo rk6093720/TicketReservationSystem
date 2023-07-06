@@ -11,4 +11,4 @@ Ticket_Router.post("/createticket", CreateTicket);
 // Ticket_Router for seat selection by post method
 Ticket_Router.post("/seat_selection",SelectSeat)
 
-module.exports=Ticket_Router
+module.exports= {Ticket_Router }
