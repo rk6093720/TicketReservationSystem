@@ -56,13 +56,13 @@ const TicketDetail = async(req,res)=>{
 //post ticketlist
 
 const CreateTicket = async(req,res)=>{
-     const {name,age,gender,isconfirm,seat,transactionType,amount,timestamp}=(req.body);
+     const {name,age,gender,isconfirm,seats,transactionType,amount,timestamp}=(req.body);
      const newTicket = new TicketModal({
           name,
           age,
           gender,
           isconfirm,
-          seat,
+          seats,
           transactionType,
           amount,
           timestamp,
