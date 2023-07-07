@@ -2,9 +2,9 @@ const {TicketModal}= require("../modal/ticket.modal");
 const { UserModal } = require("../modal/user.modal");
 //get ticketlist
 const Ticketlist = async(req,res)=>{
-  const ticketlist= await TicketModal.find({});
-  console.log(ticketlist);
     try{
+      const ticketlist= await TicketModal.find();
+      console.log(ticketlist);
       res.status(201).json({Message:"ticket list is success",Success:true,ticketlist})
     }catch(error){
       console.log(error);
