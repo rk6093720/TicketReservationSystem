@@ -36,7 +36,7 @@ userSchema.methods.generateAuthToken= async function (){
 }
 const UserModal = mongoose.model("USER", userSchema);
 
-module.exports= UserModal
+module.exports={ UserModal }
 
 
 

@@ -16,7 +16,7 @@ app.use(cors());
 // })
 app.use("/", User_Route);
 app.use("/", Ticket_Router);
-app.use("/", addtoCartRouter)
+app.use("/card", addtoCartRouter)
 app.listen(Port,async()=>{
     try {
         await Connect;

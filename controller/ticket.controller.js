@@ -1,41 +1,14 @@
 const {TicketModal}= require("../modal/ticket.modal");
+const { UserModal } = require("../modal/user.modal");
 //get ticketlist
 const Ticketlist = async(req,res)=>{
-    var q = req?.query;
-    if (q.name || q.age || q.sort_amount ) {
-      let name;
-      let age;
-        q.name
-        ? (name = { name: { $regex: "^" + q.name, $options: "i" } })
-        : (name = null);
-      q.age
-        ? (age = { age: { $regex: "^" + q.age, $options: "i" } })
-        : (age = null);
-      let value = [name,age];
-      let newvalue = value.filter((el) => el != null);
-      console.log(newvalue)
-      if (newvalue.length > 0) {
-        let data = await TicketModal.find({ $and: [...newvalue] })
-        try {
-          return res.send({ data: data });
-        } catch (err) {
-          return res.status(400).send({ error: err.message });
-        }
-      } else {
-        let data = await TicketModal.find()
-        try {
-          return res.send({ data: data });
-        } catch (err) {
-          return res.status(400).send({ error: err.message });
-        }
-      }
-    } else {
-      let data = await TicketModal.find();
-      try {
-        return res.send({ data: data });
-      } catch (err) {
-        return res.status(400).send({ error: err.message });
-      }
+    try{
+      const ticketlist= await TicketModal.find({});
+      res.status(201).json({Message:"ticket list is success",Success:true,ticketlist})
+    }catch(error){
+      console.log(error);
+      res.status(404).json({message:"ticket list not found"})
+    
     }
 }
 
@@ -44,7 +17,7 @@ const TicketDetail = async(req,res)=>{
     // const age = req?.params?.age;
     const id = req?.params?._id;
     // res.send(params);
-    console.log(id);
+    // console.log(id);
     const value = await TicketModal.findOne({  id });
     console.log(value)
     try {
@@ -56,27 +29,19 @@ const TicketDetail = async(req,res)=>{
 //post ticketlist
 
 const CreateTicket = async(req,res)=>{
-     const {name,age,gender,isconfirm,seats,transactionType,amount,timestamp}=(req.body);
-     const newTicket = new TicketModal({
-          name,
-          age,
-          gender,
-          isconfirm,
-          seats,
-          transactionType,
-          amount,
-          timestamp,
-          userid:req.user
-     })
+     const {name,age,gender,isconfirm,seat,transactionType,amount,timestamp}=(req.body);
     try{
-       const NewUserTicket= await newTicket.save();
-       console.log(NewUserTicket)
-       if(NewUserTicket){
-            res.status(201).json({message:"ticket is created  succesfully",Success:true,NewUserTicket})
-       }else{
-        res.status(500).json({message:"ticket is not created"})
-       }
-        // res.status(201).json(newTicket)
+      const newTicket = await TicketModal.create({
+        name,
+        age,
+        gender,
+        isconfirm,
+        seat,
+        transactionType,
+        amount,
+        timestamp
+   })
+    res.status(201).json({message:"ticket is created  succesfully",Success:true,newTicket})
     }catch(err){
         console.log(err);
         res.status(500).json({message:"ticket is not created"})
@@ -103,10 +68,83 @@ const SelectSeat=async(req,res)=>{
     res.status(500).json({ message: 'Internal server error' })
    }
 }
+
+// payment of ticket
+const processTransaction = async (req, res) => {
+  const { amount, type } = req.body;
+  const {accesstoken, userid} = req.headers;
+
+  try {
+    const user = await UserModal.findById(userid);
+
+    if(accesstoken!==user.accessToken){
+      return res.status(400).json({ message: 'Not access'});
+    }
+    
+    if (type === 'deposit') {
+      user.amount += Number(amount);
+    }else if (type === 'withdraw'){
+      if (user.amount < Number(amount)) {
+        return res.status(400).json({ message: 'Insufficient Funds' });
+      }
+      user.amount -= Number(amount);
+    }
+    await user.save();
+    
+    const transaction = new TicketModal({ user: userid, amount, transactionType: type });
+
+    await transaction.save();
+
+    res.json({ message: 'Transaction processed successfully', user: {userId: user._id, email: user.email, accessToken: user.accessToken, amount: user.amount}});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const allTransaction = async (req, res) => {
+  const {accesstoken, userid} = req.headers;
+
+  try {
+    const user = await UserModal.findById(userid);
+
+    if(accesstoken!==user.accessToken){
+      return res.status(400).json({ message: 'Not access'});
+    }
+
+    const transactionList = await TicketModal.find({ user: userid });
+
+    res.json(transactionList);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const allTransactionPerUser = async (req, res) => {
+  const {accesstoken, userid, adminid} = req.headers;
+
+  try {
+    const user = await UserModal.findById(adminid);
+
+    if(accesstoken!==user.accessToken){
+      return res.status(400).json({ message: 'Not access'});
+    }
+
+    const transactionList = await TicketModal.find({ user: userid });
+    res.json(transactionList);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
 module.exports={
     Ticketlist,
     CreateTicket,
     TicketDetail,
-    SelectSeat
+    SelectSeat,
+    processTransaction,
+    allTransaction,
+    allTransactionPerUser
 
 }

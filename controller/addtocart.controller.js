@@ -2,6 +2,7 @@ const { CartTicketModel } = require("../modal/cart_Ticket.modal");
 
 const getcart = async (req, res) => {
   const user_id = req?.body?.user_id;
+  console.log(user_id)
   try {
     const value = await CartTicketModel.find({ ticket_id: user_id });
     res.send({ data: value });
@@ -12,10 +13,10 @@ const getcart = async (req, res) => {
 };
 const addcart = async (req, res) => {
   const user_id = req?.body?.user_id;
-  const { ticket_id, ticket_details } = req?.body;
+  console.log(user_id)
+  const { ticket_id, ticket_details,seat,amount } = req?.body;
   const isdata = await CartTicketModel.findOne({
     ticket_id,
-    ticket_details,
     person_id: user_id,
   });
   if (isdata) {
@@ -33,6 +34,8 @@ const addcart = async (req, res) => {
       person_id: user_id,
       ticket_id,
       ticket_details,
+      seat,
+      amount
     });
     try {
       await newcartdata.save();
@@ -45,9 +48,10 @@ const addcart = async (req, res) => {
 const updatecart = async (req, res) => {
   const user_id = req?.body?.user_id;
   const { id } = req.params;
-  const { ticket_id, ticket_details } = req?.body;
+  const { ticket_id, ticket_details, seat , amount } = req?.body;
   await CartTicketModel.findOneAndUpdate(
     { person_id: user_id, ticket_id: id },
+    {seat,amount},
     { new: true }
   );
   try {

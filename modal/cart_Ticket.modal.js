@@ -7,7 +7,9 @@ const cart_Ticket_Schema = new mongoose.Schema({
     name: String,
     age: String,
     gender:String,
-  },
+    },
+    seat:{type:String,require:true},
+  amount: { type: Number, required: true }
 });
 const CartTicketModel = mongoose.model("CART_TICKET", cart_Ticket_Schema);
 module.exports = { CartTicketModel };

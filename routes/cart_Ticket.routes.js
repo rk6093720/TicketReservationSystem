@@ -4,6 +4,6 @@ require("dotenv").config();
 const addtoCartRouter = express.Router();
 addtoCartRouter.get("/cart", AddtocartController.getcart );
 addtoCartRouter.post("/addcart",AddtocartController.addcart);
-addtoCartRouter.delete("/:id",  AddtocartController.deletecart);
-addtoCartRouter.patch("/:id",  AddtocartController.updatecart);
+addtoCartRouter.delete("/delete/:id",  AddtocartController.deletecart);
+addtoCartRouter.patch("/edit/:id",  AddtocartController.updatecart);
 module.exports = { addtoCartRouter} ;
